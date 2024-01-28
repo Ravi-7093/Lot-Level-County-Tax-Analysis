@@ -8,7 +8,7 @@ Primary Objectives:
 
 <b>Data Collection and Cleaning</b>: Develop an analytical approach to calculate the property tax revenue per acre. This includes processing and standardizing data to ensure consistency across various property types and areas.
 
-<b>Categorization by Census Tract and Zip Code/b>: Organize data by 2024 census tracts and zip codes to facilitate detailed geographic analysis.
+<b>Categorization by Census Tract and Zip Code</b>: Organize data by 2024 census tracts and zip codes to facilitate detailed geographic analysis.
 
 <b>Heat Map Visualization</b>: Create a heat map to visually represent the tax revenue per acre. 
 
