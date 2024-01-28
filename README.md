@@ -4,7 +4,7 @@ An analysis and visualization of property tax revenue per acre in a county, cate
 
 <b>Primary Objectives</b>:
 
-<h1 style="color:rgb(252, 232, 3);"><b>Data Collection and Integration</b></h1>: Collect property data from county sources like Tarrant Appraisal District. The data includes property values, types, acreage, and property tax collected. Also, include sales tax data by property.
+<b>Data Collection and Integration</b>: Collect property data from county sources like Tarrant Appraisal District. The data includes property values, types, acreage, and property tax collected. Also, include sales tax data by property.
 
 <b>Data Collection and Cleaning</b>: Develop an analytical approach to calculate the property tax revenue per acre. This includes processing and standardizing data to ensure consistency across various property types and areas.
 
