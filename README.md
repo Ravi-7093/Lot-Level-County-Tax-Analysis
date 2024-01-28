@@ -1,10 +1,10 @@
 # Lot-Level-County-Tax-Analysis
 
-A tool to analyze and visualize property tax revenue per acre in a county, categorized by census tracts and zip codes using 2024 data. It integrates property values, types, acreage, and tax data to create a heat map, highlighting areas based on tax efficiency. This project aids in urban planning and economic strategy development.
+An analysis and visualization of property tax revenue per acre in a county, categorized by census tracts and zip codes using 2024 data. The project integrates property values, types, acreage, and tax data to produce a heat map, emphasizing areas based on tax efficiency, supporting urban planning and economic strategy insights.
 
-Primary Objectives:
+<b>Primary Objectives</b>:
 
-<b>Data Collection and Integration</b>: Collect property data from county sources like Tarrant Appraisal District. The data includes property values, types, acreage, and property tax collected. Also, include sales tax data by property.
+<h1 style="color:rgb(252, 232, 3);"><b>Data Collection and Integration</b></h1>: Collect property data from county sources like Tarrant Appraisal District. The data includes property values, types, acreage, and property tax collected. Also, include sales tax data by property.
 
 <b>Data Collection and Cleaning</b>: Develop an analytical approach to calculate the property tax revenue per acre. This includes processing and standardizing data to ensure consistency across various property types and areas.
 
@@ -12,4 +12,4 @@ Primary Objectives:
 
 <b>Heat Map Visualization</b>: Create a heat map to visually represent the tax revenue per acre. 
 
-Interpretation and Reporting: Provide insights and interpretations of the data, identifying areas with high and low tax efficiency.
+<b>Interpretation and Reporting</b>: Provide insights and interpretations of the data, identifying areas with high and low tax efficiency.
