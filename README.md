@@ -13,3 +13,6 @@ An analysis and visualization of property tax revenue per acre in a county, cate
 <b>Heat Map Visualization</b>: Create a heat map to visually represent the tax revenue per acre. 
 
 <b>Interpretation and Reporting</b>: Provide insights and interpretations of the data, identifying areas with high and low tax efficiency.
+
+<h1><b>Data Set</b></h1>
+<p>https://drive.google.com/drive/folders/13baIHBt9amyC9QaTW575mYSqRgnxpYZ8</p>
