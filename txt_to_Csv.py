@@ -80,3 +80,19 @@ for i in categorizeByZip.keys():
             print("ZIP CODE NOT MENTIONED "+" has "+str(len(categorizeByZip[i]))+" LOCATIONS")
         else:
             print(i+" has "+str(len(categorizeByZip[i]))+" LOCATION")
+
+#check which columns have multiple data types
+df = pd.read_csv(output_file_path)
+
+# Function to get unique data types in a column
+def get_unique_data_types(column):
+    return column.apply(lambda x: type(x)).unique()
+
+
+data_types_per_column = {}
+
+for column in df.columns:
+    data_types_per_column[column] = get_unique_data_types(df[column])
+
+for column, types in data_types_per_column.items():
+    print(f"Column '{column}' contains types: {types}")
