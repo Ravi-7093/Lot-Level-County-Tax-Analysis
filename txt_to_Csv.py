@@ -96,3 +96,41 @@ for column in df.columns:
 
 for column, types in data_types_per_column.items():
     print(f"Column '{column}' contains types: {types}")
+
+def convert_and_handle_nans(df):
+    for column in df.columns:
+        # Determine if the column has more than one unique data type
+        unique_types = df[column].apply(lambda x: type(x)).unique()
+
+        # If there's more than one unique type, perform conversion and handle NaNs
+        if len(unique_types) > 1:
+            # If the column is mostly numeric, convert non-numeric to NaN, then handle NaNs
+            if np.issubdtype(df[column].dtype, np.number):
+                df[column] = pd.to_numeric(df[column], errors='coerce')
+                # Here you can decide how to handle NaNs, for example:
+                # Fill NaNs with 0, mean, or median
+                
+                df[column].fillna(df[column].median(), inplace=True)
+            else:
+                # For columns that are not primarily numeric, convert everything to strings
+                df[column] = df[column].astype(str)
+                # Replace 'nan' string (resulting from conversion) with a placeholder
+                df[column].replace('nan', 'Unknown', inplace=True)
+        else:
+            # If the column has a single type but still could contain NaNs, handle accordingly
+            if df[column].isnull().any():
+                if df[column].dtype == np.float64 or df[column].dtype == np.int64:
+                    # Handle NaNs for numeric columns
+                    df[column].fillna(df[column].median(), inplace=True)
+                else:
+                    # Handle NaNs for non-numeric columns
+                    df[column].fillna('Unknown', inplace=True)
+
+# Apply the function to your DataFrame
+convert_and_handle_nans(df)
+
+# Verify the conversions and NaN handling
+for column in df.columns:
+    print(f"{column}: {df[column].dtype}, NaNs: {df[column].isnull().any()}")
+
+
