@@ -2,7 +2,7 @@ import csv
 import pandas as pd
 import numpy as np
 
-# Path to your text file
+
 input_file_path = 'output.csv'  # Replace with the path to your csv file
 #output_file_path = '/Users/rav_1797/Desktop/output.csv'
 
