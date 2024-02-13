@@ -3,19 +3,19 @@ import pandas as pd
 import numpy as np
 
 # Path to your text file
-input_file_path = 'C:\\Users\\rxp6833\\Downloads\\Lot-Level-County-Tax-Analysis\\3kproperty.csv'  # Replace with the path to your csv file
+input_file_path = 'output.csv'  # Replace with the path to your csv file
 #output_file_path = '/Users/rav_1797/Desktop/output.csv'
 
-with open(input_file_path, 'r', encoding='utf-8', errors='replace') as text_file, open(output_file_path, 'w', newline='') as csv_file:
-    writer = csv.writer(csv_file)
+#with open(input_file_path, 'r', encoding='utf-8', errors='replace') as text_file, open(output_file_path, 'w', newline='') as csv_file:
+#    writer = csv.writer(csv_file)
 
     # Read each line in the text file
-    for line in text_file:
-        # Split the line by pipe and write to the CSV file
-        writer.writerow(line.strip().split('|'))
+#    for line in text_file:
+#        # Split the line by pipe and write to the CSV file
+#        writer.writerow(line.strip().split('|'))
 
-print('SUCCESSFULLY CONVERTED TO .CSV FILE FROM .TXT FILE')
-print('___________________________________________________')
+#print('SUCCESSFULLY CONVERTED TO .CSV FILE FROM .TXT FILE')
+#print('___________________________________________________')
 
 
 
@@ -60,6 +60,58 @@ print('AFTER ELIMINATING NULL VALUES')
 print('___________________________________________________')
 print(data.isna().sum())
 print('___________________________________________________')
+
+#check which columns have multiple data types
+df = pd.read_csv(input_file_path)
+
+# Function to get unique data types in a column
+def get_unique_data_types(column):
+    return column.apply(lambda x: type(x)).unique()
+
+
+data_types_per_column = {}
+
+for column in df.columns:
+    data_types_per_column[column] = get_unique_data_types(df[column])
+
+for column, types in data_types_per_column.items():
+    print(f"Column '{column}' contains types: {types}")
+
+def convert_and_handle_nans(df):
+    for column in df.columns:
+        # Determine if the column has more than one unique data type
+        unique_types = df[column].apply(lambda x: type(x)).unique()
+
+        # If there's more than one unique type, perform conversion and handle NaNs
+        if len(unique_types) > 1:
+            # If the column is mostly numeric, convert non-numeric to NaN, then handle NaNs
+            if np.issubdtype(df[column].dtype, np.number):
+                df[column] = pd.to_numeric(df[column], errors='coerce')
+                # Here you can decide how to handle NaNs, for example:
+                # Fill NaNs with 0, mean, or median
+                
+                df[column].fillna(df[column].median(), inplace=True)
+            else:
+                # For columns that are not primarily numeric, convert everything to strings
+                df[column] = df[column].astype(str)
+                # Replace 'nan' string (resulting from conversion) with a placeholder
+                df[column].replace('nan', 'Unknown', inplace=True)
+        else:
+            # If the column has a single type but still could contain NaNs, handle accordingly
+            if df[column].isnull().any():
+                if df[column].dtype == np.float64 or df[column].dtype == np.int64:
+                    # Handle NaNs for numeric columns
+                    df[column].fillna(df[column].median(), inplace=True)
+                else:
+                    # Handle NaNs for non-numeric columns
+                    df[column].fillna('Unknown', inplace=True)
+
+# Apply the function to your DataFrame
+convert_and_handle_nans(df)
+
+# Verify the conversions and NaN handling
+for column in df.columns:
+    print(f"{column}: {df[column].dtype}, NaNs: {df[column].isnull().any()}")
 
 
 
@@ -207,57 +259,32 @@ for zip_code, properties in grouped_data.items():
 
 
 
+#Calculating Property Value ($/SQFT) by Zip Code
+propertyValueByZip = {}
 
-#check which columns have multiple data types
-df = pd.read_csv(output_file_path)
+for i in categorizeByZip.keys():
+    propertyValueByZip[i] = []
 
-# Function to get unique data types in a column
-def get_unique_data_types(column):
-    return column.apply(lambda x: type(x)).unique()
-
-
-data_types_per_column = {}
-
-for column in df.columns:
-    data_types_per_column[column] = get_unique_data_types(df[column])
-
-for column, types in data_types_per_column.items():
-    print(f"Column '{column}' contains types: {types}")
-
-def convert_and_handle_nans(df):
-    for column in df.columns:
-        # Determine if the column has more than one unique data type
-        unique_types = df[column].apply(lambda x: type(x)).unique()
-
-        # If there's more than one unique type, perform conversion and handle NaNs
-        if len(unique_types) > 1:
-            # If the column is mostly numeric, convert non-numeric to NaN, then handle NaNs
-            if np.issubdtype(df[column].dtype, np.number):
-                df[column] = pd.to_numeric(df[column], errors='coerce')
-                # Here you can decide how to handle NaNs, for example:
-                # Fill NaNs with 0, mean, or median
-                
-                df[column].fillna(df[column].median(), inplace=True)
-            else:
-                # For columns that are not primarily numeric, convert everything to strings
-                df[column] = df[column].astype(str)
-                # Replace 'nan' string (resulting from conversion) with a placeholder
-                df[column].replace('nan', 'Unknown', inplace=True)
-        else:
-            # If the column has a single type but still could contain NaNs, handle accordingly
-            if df[column].isnull().any():
-                if df[column].dtype == np.float64 or df[column].dtype == np.int64:
-                    # Handle NaNs for numeric columns
-                    df[column].fillna(df[column].median(), inplace=True)
-                else:
-                    # Handle NaNs for non-numeric columns
-                    df[column].fillna('Unknown', inplace=True)
-
-# Apply the function to your DataFrame
-convert_and_handle_nans(df)
-
-# Verify the conversions and NaN handling
-for column in df.columns:
-    print(f"{column}: {df[column].dtype}, NaNs: {df[column].isnull().any()}")
+for row in categorizeByZip.keys():
+    for j in categorizeByZip[row]:
+        try:
+            propertyvalueData = propertyValueByZip[row]
+            propertyvalueData.append([j[6],j[34],j[44],int(j[34])/int(j[44])])
+            propertyValueByZip[row] = propertyvalueData
+        except:
+            propertyvalueData = propertyValueByZip[row]
+            propertyvalueData.append([j[6],j[34],0,0])
+            propertyValueByZip[row] = propertyvalueData
+            continue
+        
+for i in propertyValueByZip.keys():
+    print('\n\n')
+    if(len(propertyValueByZip[i])>1):
+        print(i+" HAVE "+str(len(propertyValueByZip[i]))+" ADDRESS AND THEIR COST PER SQ FEET IS AS FOLLOWS")
+    else:
+        print(i+" HAS "+str(len(propertyValueByZip[i]))+" ADDRESS AND ITS COST PER SQ FEET IS AS FOLLOWS")
+    print('_____________________________________________________________________________')
+    for j in propertyValueByZip[i]:
+        print("PROPERTY "+j[0]+" COSTS "+str(j[3])+" $/SQFT")
 
 
