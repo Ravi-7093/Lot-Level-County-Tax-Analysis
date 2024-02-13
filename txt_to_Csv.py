@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 # Path to your text file
-input_file_path = 'C:\\Users\\rxp6833\\Downloads\\Lot-Level-County-Tax-Analysis\\3kproperty.csv'  # Replace with the path to your text file
+input_file_path = 'C:\\Users\\rxp6833\\Downloads\\Lot-Level-County-Tax-Analysis\\3kproperty.csv'  # Replace with the path to your csv file
 #output_file_path = '/Users/rav_1797/Desktop/output.csv'
 
 with open(input_file_path, 'r', encoding='utf-8', errors='replace') as text_file, open(output_file_path, 'w', newline='') as csv_file:
