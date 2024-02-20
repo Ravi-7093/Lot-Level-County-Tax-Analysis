@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np
 
 
-input_file_path = 'output.csv'  # Replace with the path to your csv file
-#output_file_path = '/Users/rav_1797/Desktop/output.csv'
+input_file_path = 'output.csv' # Replace with the path to your csv file
+output_file_path = 'Processed.CSV'
 
 #with open(input_file_path, 'r', encoding='utf-8', errors='replace') as text_file, open(output_file_path, 'w', newline='') as csv_file:
 #    writer = csv.writer(csv_file)
@@ -162,7 +162,7 @@ use_code_mapping = {
     "B4": "Residential Quadplex",
     "C1": "Vacant Land Residential",
     "C1C": "Vacant Land Commercial",
-    "C2C": "Commercial Land With Improvement Value",
+    "C2": "Commercial Land With Improvement Value",
     "D1": "Qualified Open Space Land",
     "D2": "Farm and Ranch Improvements on Qualified Open Space Land",
     "E": "Rural Land (No Ag) and Improvements Residential",
@@ -259,32 +259,55 @@ for zip_code, properties in grouped_data.items():
 
 
 
-#Calculating Property Value ($/SQFT) by Zip Code
+#Calculating Property Value by using apprisal_value
+#if Apprisal value is zero we use Total Value and if that is zero we add 100$ and segregate by Zip Code
 propertyValueByZip = {}
 
 for i in categorizeByZip.keys():
     propertyValueByZip[i] = []
-
+    
 for row in categorizeByZip.keys():
+    propertyValueByZip[i] = []
     for j in categorizeByZip[row]:
-        try:
-            propertyvalueData = propertyValueByZip[row]
-            propertyvalueData.append([j[6],j[34],j[44],int(j[34])/int(j[44])])
-            propertyValueByZip[row] = propertyvalueData
-        except:
-            propertyvalueData = propertyValueByZip[row]
-            propertyvalueData.append([j[6],j[34],0,0])
-            propertyValueByZip[row] = propertyvalueData
-            continue
+        propertyvalueData = propertyValueByZip[row]
+        insertData = []
+        propertyvalueData = propertyValueByZip[row]
+        insertData.append(j[6])
+        #property value
+        if(int(j[52])>0):
+            insertData.append(int(j[52]))
+                
+        else:
+            insertData.append(100 if(int(j[34])==0) else j[34])
+            
+        #accerage
+        insertData.append(j[43] if(float(j[43])>0) else str(0.0001))
         
-for i in propertyValueByZip.keys():
-    print('\n\n')
-    if(len(propertyValueByZip[i])>1):
-        print(i+" HAVE "+str(len(propertyValueByZip[i]))+" ADDRESS AND THEIR COST PER SQ FEET IS AS FOLLOWS")
-    else:
-        print(i+" HAS "+str(len(propertyValueByZip[i]))+" ADDRESS AND ITS COST PER SQ FEET IS AS FOLLOWS")
-    print('_____________________________________________________________________________')
-    for j in propertyValueByZip[i]:
-        print("PROPERTY "+j[0]+" COSTS "+str(j[3])+" $/SQFT")
+        #property Type:
+        insertData.append(use_code_mapping[j[17].strip()])
+        
+        # Property Tax Collected
+        if(int(j[52])>0):
+            insertData.append(j[52])
+        else:
+            insertData.append(100 if(int(j[34])==0) else j[34])
+            
+        #standard Metrics
+        insertData.append(int(insertData[-1])/float(insertData[-3]))
+        
+        propertyvalueData.append(insertData)
+        propertyValueByZip[row] = propertyvalueData
 
+#Inserting the calculated value to CSV File
+with open(output_file_path, 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['ZipCode','Owner Address','Property Value', 'Acerage', 'Property Description', 'Property Tax','Standardized Metric'])
+    
+    for i in propertyValueByZip.keys():
+        for j in propertyValueByZip[i]:
+           writer.writerow([i,j[0],j[1],j[2],j[3],j[4],j[5]])
+
+print('SUCCESSFULLY CONVERTED THE PROCESSED DATA TO .CSV FILE')
+        
+    
 
