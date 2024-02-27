@@ -272,7 +272,7 @@ for row in categorizeByZip.keys():
         propertyvalueData = propertyValueByZip[row]
         insertData = []
         propertyvalueData = propertyValueByZip[row]
-        insertData.append(j[6])
+        insertData.append(j[12])
         #property value
         if(int(j[52])>0):
             insertData.append(int(j[52]))
